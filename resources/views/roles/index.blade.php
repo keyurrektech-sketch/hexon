@@ -43,9 +43,11 @@
                                                 <td>{{ ++$i }}</td>
                                                 <td>{{ $role->name }}</td>
                                                 <td class="d-flex">
-                                                    <a class="btn btn-info btn-sm me-2" href="{{ route('roles.show', $role->id) }}">
-                                                        <i class="fa-solid fa-list"></i>
-                                                    </a>
+                                                    @can('role-list')
+                                                        <a class="btn btn-info btn-sm me-2" href="{{ route('roles.show', $role->id) }}">
+                                                            <i class="fa-solid fa-list"></i>
+                                                        </a>
+                                                    @endcan
                                                     @can('role-edit')
                                                         <a class="btn btn-primary btn-sm me-2" href="{{ route('roles.edit', $role->id) }}">
                                                             <i class="fa-solid fa-pen-to-square"></i>
@@ -67,8 +69,11 @@
                                 </table>
                             </div>
                         </div>
-                        <div class="card-footer">
-                            <div class="d-flex justify-content-start">
+                        <div class="card-footer d-flex justify-content-between">
+                            <div>
+                                Showing {{ $roles->firstItem() }} to {{ $roles->lastItem() }} of {{ $roles->total() }} Parts
+                            </div>
+                            <div>
                                 {!! $roles->links() !!}
                             </div>
                         </div>

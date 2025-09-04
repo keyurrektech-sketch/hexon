@@ -8,22 +8,22 @@
             <div class="row">
                 <div class="row mb-3">
                     @php
-                    $i = ($data->currentPage() - 1) * $data->perPage();
+                    $i = ($spare_parts->currentPage() - 1) * $spare_parts->perPage();
                     @endphp
                     <!-- [Leads] start -->
                     <div class="col-xxl-8">
                         @session('success')
                             <div class="alert alert-success" role="alert"> 
-                                {{ $value }}
+                                {{ session('success') }}
                             </div>
                         @endsession
                         <div class="card stretch stretch-full">
                             <div class="card-header">
-                                <h5 class="card-title">Users</h5>
+                                <h5 class="card-title">Parts</h5>
                                 <div class="card-header-action">                      
-                                    @can('user-create')
-                                        <a class="btn btn-success btn-sm" href="{{ route('users.create') }}">
-                                            <i class="fa fa-plus"></i> Create New User
+                                    @can('part-create')
+                                        <a class="btn btn-success btn-sm" href="{{ route('spareParts.create') }}">
+                                            <i class="fa fa-plus"></i> Add New Part
                                         </a>
                                     @endcan
                                 </div>
@@ -35,50 +35,48 @@
                                             <tr class="border-b">
                                                 <th>No</th>
                                                 <th>Name</th>
-                                                <th>Emails</th>
-                                                <th>Roles</th>
+                                                <th>Type</th>
+                                                <th>Size</th>
+                                                <th>Weight</th>
+                                                <th>Unit</th>
+                                                <th>Qty</th>
+                                                <th>Minimum Qty</th>
+                                                <th>Rate</th>
                                                 <th>Actions</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach ($data as $key => $user)
+                                            @foreach ($spare_parts as $spare_part)
                                                 <tr>
                                                     <td>{{ ++$i }}</td>
-                                                    <td>{{ $user->name }}</td>
-                                                    <td>{{ $user->email }}</td>
-                                                    <td>
-                                                    @if(!empty($user->getRoleNames()))
-                                                        @foreach($user->getRoleNames() as $v)
-                                                        <label class="badge bg-success">{{ $v }}</label>
-                                                        @endforeach
-                                                    @endif
-                                                    </td>
+                                                    <td>{{ $spare_part->name }}</td>
+                                                    <td>{{ $spare_part->type }}</td>
+                                                    <td>{{ $spare_part->size }}</td>
+                                                    <td>{{ $spare_part->weight }}</td>
+                                                    <td>{{ $spare_part->unit }}</td>
+                                                    <td>{{ $spare_part->qty }}</td>
+                                                    <td>{{ $spare_part->minimum_qty }}</td>
+                                                    <td>{{ $spare_part->rate }}</td>
                                                     <td class="d-flex">
-                                                        @can('user-list')
-                                                            <a class="btn btn-info btn-sm me-2" href="{{ route('users.show',$user->id) }}">
+                                                        @can('part-list')
+                                                            <a class="btn btn-info btn-sm me-2" href="{{ route('spareParts.show', $spare_part->id) }}">
                                                                 <i class="fa-solid fa-list"></i>
                                                             </a>
                                                         @endcan
-                                                        @can('user-edit')
-                                                            <a class="btn btn-primary btn-sm me-2" href="{{ route('users.edit',$user->id) }}">
+                                                        @can('part-edit')
+                                                            <a class="btn btn-primary btn-sm me-2" href="{{ route('spareParts.edit', $spare_part->id) }}">
                                                                 <i class="fa-solid fa-pen-to-square"></i>
                                                             </a>
                                                         @endcan
-                                                        @can('user-delete')
-                                                            @if(Auth::id() !== $user->id)
-                                                                <form method="POST" action="{{ route('users.destroy', $user->id) }}" style="display:inline">
-                                                                    @csrf
-                                                                    @method('DELETE')
+                                                        @can('part-delete')
+                                                            <form method="POST" action="{{ route('spareParts.destroy', $spare_part->id) }}" style="display:inline">
+                                                                @csrf
+                                                                @method('DELETE')
 
-                                                                    <button type="submit" class="btn btn-danger btn-sm me-2">
-                                                                        <i class="fa-solid fa-trash"></i>
-                                                                    </button>
-                                                                </form>
-                                                            @else
-                                                                <button type="submit" class="btn btn-danger btn-sm me-2" disabled>
+                                                                <button type="submit" class="btn btn-danger btn-sm me-2">
                                                                     <i class="fa-solid fa-trash"></i>
                                                                 </button>
-                                                            @endif
+                                                            </form>
                                                         @endcan
                                                     </td>
                                                 </tr>
@@ -89,10 +87,10 @@
                             </div>
                             <div class="card-footer d-flex justify-content-between">
                                 <div>
-                                    Showing {{ $data->firstItem() }} to {{ $data->lastItem() }} of {{ $data->total() }} Parts
+                                    Showing {{ $spare_parts->firstItem() }} to {{ $spare_parts->lastItem() }} of {{ $spare_parts->total() }} Parts
                                 </div>
                                 <div>
-                                    {!! $data->links() !!}
+                                    {!! $spare_parts->links() !!}
                                 </div>
                             </div>
                         </div>
