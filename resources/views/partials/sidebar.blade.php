@@ -41,12 +41,21 @@
                     @can('part-list')
                         <li class="nxl-item">
                             <a class="nav-link nxl-link" href="{{ route('spareParts.index') }}">
-                                <span class="nxl-micon"><i class="feather-settings"></i></span> 
+                                <span class="nxl-micon"><i class="feather-tool"></i></span> 
                                 <span class="nxl-mtext">Parts</span>                                
                             </a>
                         </li>
                     @endcan
-                    
+
+                    @can('product-list')
+                        <li class="nxl-item">
+                            <a class="nav-link nxl-link" href="{{ route('products.index') }}">
+                                <span class="nxl-micon"><i class="feather-box"></i></span> 
+                                <span class="nxl-mtext">Products</span>                                
+                            </a>
+                        </li>
+                    @endcan
+
                     <li class="nxl-item">
                         <a class="nav-link nxl-link" href="{{ route('settings.edit') }}">
                             <span class="nxl-micon"><i class="feather-settings"></i></span> 
@@ -74,7 +83,7 @@
                 <!--! [Start] nxl-navigation-toggle !-->
                 <div class="nxl-navigation-toggle">
                     <a href="javascript:void(0);" id="menu-mini-button">
-                        <i class="feather-align-left"></i>
+                        <i class="feather-align-justify"></i>
                     </a>
                     <a href="javascript:void(0);" id="menu-expend-button" style="display: none">
                         <i class="feather-arrow-right"></i>
@@ -107,7 +116,7 @@
                                 <span class="input-group-text">
                                     <i class="feather-search fs-6 text-muted"></i>
                                 </span>
-                                <input type="text" class="form-control search-input-field" placeholder="Search...." />
+                                <input type="text" name="search" class="form-control search-input-field" placeholder="Search...." />
                                 <span class="input-group-text">
                                     <button type="button" class="btn-close"></button>
                                 </span>

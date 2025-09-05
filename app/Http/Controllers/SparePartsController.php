@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\SpareParts;
-use Illuminate\Validation\Rule;
+    use Illuminate\Http\Request;
+    use App\Models\SpareParts;
+    use Illuminate\Validation\Rule;
 
 class SparePartsController extends Controller
 {

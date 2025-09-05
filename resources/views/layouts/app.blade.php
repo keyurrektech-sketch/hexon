@@ -28,16 +28,21 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('build/assets/vendors/css/vendors.min.css')}}">
     <link rel="stylesheet" type="text/css" href="{{ asset('build/assets/vendors/css/daterangepicker.min.css')}}" />
     <!--! END: Vendors CSS-->
+    <!-- Select2 CSS -->
+    
     <!--! BEGIN: Custom CSS-->
     <link rel="stylesheet" type="text/css" href="{{ asset('build/assets/css/theme.min.css')}}">
     <!--! END: Custom CSS-->
     <!--! HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries !-->
     <!--! WARNING: Respond.js doesn"t work if you view the page via file: !-->
     <!--[if lt IE 9]>
-			<script src="https:oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-			<script src="https:oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-		<![endif]-->
-</head>
+    <script src="https:oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https:oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" rel="stylesheet" />
+
+    </head>
 <body>
     @auth
         @include('partials.sidebar')
@@ -57,6 +62,8 @@
     <!--! ================================================================ !-->
     <!--! Footer Script !-->
     <!--! ================================================================ !-->
+    <!-- jQuery (required for Select2) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!--! BEGIN: Vendors JS !-->
     <script src="{{ asset('build/assets/vendors/js/vendors.min.js')}}"></script>
     <!-- vendors.min.js {always must need to be top} -->
@@ -68,6 +75,28 @@
     <script src="{{ asset('build/assets/js/theme-customizer-init.min.js')}}"></script>
     <!--! END: Theme Customizer !-->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ asset('build/assets/js/main.js') }}"></script>
 
+    
+    <!-- Select2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    @stack('scripts')
+    <style>
+        .select2-container--bootstrap-5 .select2-selection {
+            height: calc(2.5rem + 5px) !important; /* same as form-control-lg */
+            min-height: calc(2.5rem + 5px) !important;
+            padding: 0.375rem 0.75rem;
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+
+        /* Ensure arrow aligns properly */
+        .select2-container--bootstrap-5 .select2-selection__arrow {
+            height: 100% !important;
+            top: 50% !important;
+            transform: translateY(-50%);
+        }
+    </style>
 </body>
 </html>
