@@ -8,6 +8,7 @@ use Spatie\Permission\Models\Permission;
 use DB;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
+use App\DataTables\RolesDataTable;
 
 class RoleController extends Controller
 {
@@ -19,11 +20,10 @@ class RoleController extends Controller
         $this->middleware('permission:role-delete', ['only' => ['destroy']]);
     }
 
-    public function index(Request $request): View
+    
+    public function index(RolesDataTable $dataTable)
     {
-        $roles = Role::orderBy('id', 'DESC')->paginate(5);
-        return view('roles.index', compact('roles'))
-            ->with('i', ($request->input('page', 1) - 1) * 5);
+        return $dataTable->render('roles.index');
     }
 
     public function create(): View

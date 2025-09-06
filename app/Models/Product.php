@@ -33,7 +33,7 @@ class Product extends Model
     protected static function booted()
     {
         static::deleting(function ($product) {
-            $product->spareParts()->detach(); // ✅ removes pivot rows
+            $product->spareParts()->detach();
         });
     }
     

@@ -6,9 +6,6 @@
     <div class="nxl-content">   
         <div class="main-content">
             <div class="row">
-                @php
-                    $i = ($roles->currentPage() - 1) * $roles->perPage();
-                @endphp
                 <!-- [Leads] start -->
                 <div class="col-xxl-8">
                     @if(session('success'))
@@ -29,52 +26,7 @@
                         </div>
                         <div class="card-body custom-card-action p-0">
                             <div class="table-responsive">
-                                <table class="table table-hover mb-0">
-                                    <thead>
-                                        <tr class="border-b">
-                                            <th>No</th>
-                                            <th>Name</th>
-                                            <th>Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($roles as $key => $role)
-                                            <tr>
-                                                <td>{{ ++$i }}</td>
-                                                <td>{{ $role->name }}</td>
-                                                <td class="d-flex">
-                                                    @can('role-list')
-                                                        <a class="btn btn-info btn-sm me-2" href="{{ route('roles.show', $role->id) }}">
-                                                            <i class="fa-solid fa-list"></i>
-                                                        </a>
-                                                    @endcan
-                                                    @can('role-edit')
-                                                        <a class="btn btn-primary btn-sm me-2" href="{{ route('roles.edit', $role->id) }}">
-                                                            <i class="fa-solid fa-pen-to-square"></i>
-                                                        </a>
-                                                    @endcan
-                                                    @can('role-delete')
-                                                        <form method="POST" action="{{ route('roles.destroy', $role->id) }}" class="d-inline">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <button type="submit" class="btn btn-danger btn-sm me-2">
-                                                                <i class="fa-solid fa-trash"></i>
-                                                            </button>
-                                                        </form>
-                                                    @endcan
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                        <div class="card-footer d-flex justify-content-between">
-                            <div>
-                                Showing {{ $roles->firstItem() }} to {{ $roles->lastItem() }} of {{ $roles->total() }} Parts
-                            </div>
-                            <div>
-                                {!! $roles->links() !!}
+                                {{ $dataTable->table() }}
                             </div>
                         </div>
                     </div>
@@ -85,3 +37,7 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+    {{ $dataTable->scripts(attributes: ['type' => 'module']) }}
+@endpush    
