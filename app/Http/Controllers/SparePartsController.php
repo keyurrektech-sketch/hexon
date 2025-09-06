@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers;
 
-    use Illuminate\Http\Request;
-    use App\Models\SpareParts;
-    use Illuminate\Validation\Rule;
+use Illuminate\Http\Request;
+use App\Models\SpareParts;
+use Illuminate\Validation\Rule;
+use App\DataTables\SparePartsDataTable;
 
 class SparePartsController extends Controller
 {
-    public function index(Request $request)
+    
+    public function index(SparePartsDataTable $dataTable)
     {
-        $spare_parts = SpareParts::latest()->paginate(5);
-        return view('sparePart.index', compact('spare_parts'))
-        ->with('i', ($request->input('page', 1) - 1) * 5);    
+        return $dataTable->render('sparePart.index');
     }
 
     public function create()
@@ -50,6 +50,11 @@ class SparePartsController extends Controller
     
     public function show(SpareParts $sparePart)
     {
+        
+        if (request()->ajax()) {
+            return response()->json($sparePart);
+        }
+        
         return view('sparePart.show', compact('sparePart'));
     }
 

@@ -20,11 +20,9 @@ class RolesDataTable extends DataTable
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
         return (new EloquentDataTable($query))
+            ->addIndexColumn()
             ->editColumn('created_at', function(Role $role) {
-                return $role->created_at ? $role->created_at->format('d M Y H:i') : '';
-            })
-            ->editColumn('updated_at', function(Role $role) {
-                return $role->updated_at ? $role->updated_at->format('d M Y H:i') : '';
+                return $role->created_at ? $role->created_at->format('d M Y') : '';
             })
             ->addColumn('action', function(Role $role) {
                 $user = auth()->user();
@@ -73,7 +71,7 @@ class RolesDataTable extends DataTable
                     ->setTableId('roles-table')
                     ->columns($this->getColumns())
                     ->minifiedAjax()
-                    ->orderBy(1)
+                    ->orderBy(1, 'desc')
                     ->selectStyleSingle()
                     ->scrollX(true)
                     ->autoWidth(false)
@@ -97,10 +95,20 @@ class RolesDataTable extends DataTable
     public function getColumns(): array
     {
         return [
-            Column::make('id'),
+            Column::computed('DT_RowIndex')
+                ->title('S.No')
+                ->exportable(false)
+                ->printable(true)
+                ->orderable(false)
+                ->width(60)
+                ->addClass('text-center'),
+                
+            Column::make('id')
+                ->visible(false)
+                ->orderable(true),
+
             Column::make('name'),
             Column::make('created_at'),
-            Column::make('updated_at'),
             Column::computed('action')
                 ->exportable(false)
                 ->printable(false)

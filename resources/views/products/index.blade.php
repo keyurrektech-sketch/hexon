@@ -7,9 +7,6 @@
         <div class="main-content">
             <div class="row">
                 <div class="row mb-3">
-                    @php
-                    $i = ($products->currentPage() - 1) * $products->perPage();
-                    @endphp
                     <!-- [Leads] start -->
                     <div class="col-xxl-8">
                         @session('success')
@@ -30,61 +27,7 @@
                             </div>
                             <div class="card-body custom-card-action p-0">
                                 <div class="table-responsive">
-                                    <table class="table table-hover mb-0">
-                                        <thead>
-                                            <tr class="border-b">
-                                                <th>No</th>
-                                                <th>Product Name</th>
-                                                <th>Valve Type</th>
-                                                <th>Sku code</th>
-                                                <th>Pressure Rating</th>
-                                                <th>Actuation</th>
-                                                <th>Actions</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach ($products as $product)
-                                                <tr>
-                                                    <td>{{ ++$i }}</td>
-                                                    <td>{{ $product->name }}</td>
-                                                    <td>{{ $product->valve_type }}</td>
-                                                    <td>{{ $product->sku_code }}</td>
-                                                    <td>{{ $product->pressure_rating }}</td>
-                                                    <td>{{ $product->actuation }}</td>
-                                                    <td class="d-flex">
-                                                        @can('product-list')
-                                                            <a class="btn btn-info btn-sm me-2" href="{{ route('products.show', $product->id) }}">
-                                                                <i class="fa-solid fa-list"></i>
-                                                            </a>
-                                                        @endcan
-                                                        @can('product-edit')
-                                                            <a class="btn btn-primary btn-sm me-2" href="{{ route('products.edit', $product->id) }}">
-                                                                <i class="fa-solid fa-pen-to-square"></i>
-                                                            </a>
-                                                        @endcan
-                                                        @can('product-delete')
-                                                            <form method="POST" action="{{ route('products.destroy', $product->id) }}" style="display:inline">
-                                                                @csrf
-                                                                @method('DELETE')
-
-                                                                <button type="submit" class="btn btn-danger btn-sm me-2">
-                                                                    <i class="fa-solid fa-trash"></i>
-                                                                </button>
-                                                            </form>
-                                                        @endcan
-                                                    </td>
-                                                </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                            <div class="card-footer d-flex justify-content-between">
-                                <div>
-                                    Showing {{ $products->firstItem() }} to {{ $products->lastItem() }} of {{ $products->total() }} Parts
-                                </div>
-                                <div>
-                                    {!! $products->links() !!}
+                                    {{ $dataTable->table() }}
                                 </div>
                             </div>
                         </div>
@@ -95,4 +38,112 @@
         </div>
     </div>
 </div>
+<!-- Product Details Modal -->
+<div class="modal fade" id="productModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Product Details</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div id="productDetails">Loading...</div>
+      </div>
+    </div>
+  </div>
+</div>
+
 @endsection
+
+@push('scripts')
+    {{ $dataTable->scripts(attributes: ['type' => 'module']) }}
+    <script>
+        $(document).on("click", ".showProduct", function () {
+        var id = $(this).data("id");
+
+            $.ajax({
+                url: "/products/" + id, // your show route
+                type: "GET",
+                success: function (data) {
+                    // assuming your controller returns JSON
+                    let html = `
+                    
+                        <table class="table table-striped">
+                            <tr>
+                                <td>Name:</td>
+                                <td> ${data.name}</td>
+                            </tr>
+                            <tr>
+                                <td>Valve Type:</td>
+                                <td> ${data.valve_type}</td>
+                            </tr>
+                            <tr>
+                                <td>Product Code:</td>
+                                <td> ${data.product_code}</td>
+                            </tr>
+                            <tr>
+                                <td>Actuation:</td>
+                                <td> ${data.actuation}</td>
+                            </tr>
+                            <tr>
+                                <td>Pressure Rating:</td>
+                                <td> ${data.pressure_rating}</td>
+                            </tr>
+                            <tr>
+                                <td>Valve Size:</td>
+                                <td> ${data.valve_size}</td>
+                            </tr>
+                            <tr>
+                                <td>Valve Size Rate:</td>
+                                <td> ${data.valve_size_rate}</td>
+                            </tr>
+                            <tr>
+                                <td>Media:</td>
+                                <td> ${data.media}</td>
+                            </tr>
+                            <tr>
+                                <td>Flow:</td>
+                                <td> ${data.flow}</td>
+                            </tr>
+                            <tr>
+                                <td>SKU Code:</td>
+                                <td> ${data.sku_code}</td>
+                            </tr>
+                            <tr>
+                                <td>MRP:</td>
+                                <td> ${data.mrp}</td>
+                            </tr>
+                            <tr>
+                                <td>Media Temperature:</td>
+                                <td> ${data.media_temperature}</td>
+                            </tr>
+                            <tr>
+                                <td>Media Temperature Rate:</td>
+                                <td> ${data.media_temperature_rate}</td>
+                            </tr>
+                            <tr>
+                                <td>Body Material:</td>
+                                <td> ${data.body_material}</td>
+                            </tr>
+                            <tr>
+                                <td>HSN Code:</td>
+                                <td> ${data.hsn_code}</td>
+                            </tr>
+                            <tr>
+                                <td>Primary Material Of Construction:</td>
+                                <td> ${data.primary_material_of_construction}</td>
+                            </tr>
+                        </table>
+                    `;
+                    $("#productDetails").html(html);
+                    $("#productModal").modal("show");
+                },
+                error: function () {
+                    $("#productDetails").html("<p class='text-danger'>Failed to load data.</p>");
+                    $("#productModal").modal("show");
+                }
+            });
+        });
+
+    </script>
+@endpush

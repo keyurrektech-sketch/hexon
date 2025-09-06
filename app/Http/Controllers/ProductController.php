@@ -6,15 +6,13 @@ use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\SpareParts;
 use Illuminate\Validation\Rule;
+use App\DataTables\ProductsDataTable;
 
 class ProductController extends Controller
 {
-    public function index(Request $request)
+    public function index(ProductsDataTable $dataTable)
     {
-        $products = Product::with('spareParts')->latest()->paginate(5);
-
-        return view('products.index', compact('products'))
-            ->with('i', ($request->input('page', 1) - 1) * 5);
+        return $dataTable->render('products.index');
     }
 
     public function create()
@@ -126,6 +124,11 @@ class ProductController extends Controller
     public function show(Product $product)
     {
         $product->load('spareParts');
+        
+        if (request()->ajax()) {
+            return response()->json($product);
+        }
+
         return view('products.show', compact('product'));
     }
 

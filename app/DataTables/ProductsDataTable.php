@@ -2,7 +2,7 @@
 
 namespace App\DataTables;
 
-use App\Models\SpareParts;
+use App\Models\Product;
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Html\Builder as HtmlBuilder;
@@ -12,37 +12,37 @@ use Yajra\DataTables\Html\Editor\Editor;
 use Yajra\DataTables\Html\Editor\Fields;
 use Yajra\DataTables\Services\DataTable;
 
-class SparePartsDataTable extends DataTable
+class ProductsDataTable extends DataTable
 {
     /**
      * Build the DataTable class.
      *
-     * @param QueryBuilder<SpareParts> $query Results from query() method.
+     * @param QueryBuilder<Product> $query Results from query() method.
      */
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
-        return (new EloquentDataTable($query))            
+        return (new EloquentDataTable($query))         
             ->addIndexColumn()
-            ->editColumn('created_at', function(SpareParts $spare_part) {
-                return $spare_part->created_at ? $spare_part->created_at->format('d M Y') : '';
+            ->editColumn('created_at', function(Product $product) {
+                return $product->created_at ? $product->created_at->format('d M Y') : '';
             })
-            ->addColumn('action', function(SpareParts $spare_part) {
+            ->addColumn('action', function(Product $product) {
                 $user = auth()->user();
                 $btn = '<div class="btn-group" role="group">';
             
-                if ($user && $user->can('part-list')) {
-                    $btn .=  '<button type="button" 
-                                class="btn btn-sm btn-info me-2 showPart" 
-                                data-id="'.$spare_part->id.'">
+                if ($user->can('product-list')) {
+                    $btn .= '<button type="button" 
+                                class="btn btn-sm btn-info me-2 showProduct" 
+                                data-id="'.$product->id.'">
                                 <i class="fa fa-eye"></i>
                             </button>';
                 }
-                if ($user && $user->can('part-edit')) {
-                    $btn .= '<a href="'.route('spareParts.edit', $spare_part->id).'" class="btn btn-sm btn-primary me-2">
+                if ($user->can('product-edit')) {
+                    $btn .= '<a href="'.route('products.edit', $product->id).'" class="btn btn-sm btn-primary me-2">
                                 <i class="fa fa-edit"></i></a>';
                 }
-                if ($user && $user->can('part-delete')) {
-                    $btn .= '<form action="'.route('spareParts.destroy', $spare_part->id).'" method="POST" style="display:inline-block;">
+                if ($user->can('product-delete')) {
+                    $btn .= '<form action="'.route('products.destroy', $product->id).'" method="POST" style="display:inline-block;">
                                 '.csrf_field().method_field("DELETE").'
                                 <button type="submit" class="btn btn-sm btn-danger me-2" 
                                     onclick="return confirm(\'Are you sure?\')">
@@ -53,20 +53,19 @@ class SparePartsDataTable extends DataTable
                 $btn .= '</div>';
                 return $btn;
             })
-            ->rawColumns(['action'])        
+            ->rawColumns(['action'])
             ->setRowId('id');
     }
 
     /**
      * Get the query source of dataTable.
      *
-     * @return QueryBuilder<SpareParts>
+     * @return QueryBuilder<Product>
      */
-    public function query(SpareParts $model): QueryBuilder
+    public function query(Product $model): QueryBuilder
     {
-        return $model->newQuery(); 
+        return $model->newQuery();
     }
-
 
     /**
      * Optional method if you want to use the html builder.
@@ -74,7 +73,7 @@ class SparePartsDataTable extends DataTable
     public function html(): HtmlBuilder
     {
         return $this->builder()
-                    ->setTableId('spareparts-table')
+                    ->setTableId('products-table')
                     ->columns($this->getColumns())
                     ->minifiedAjax()
                     ->orderBy(1, 'desc')
@@ -99,7 +98,7 @@ class SparePartsDataTable extends DataTable
      * Get the dataTable columns definition.
      */
     public function getColumns(): array
-    {        
+    {
         return [
             Column::computed('DT_RowIndex')
                 ->title('S.No')
@@ -107,18 +106,17 @@ class SparePartsDataTable extends DataTable
                 ->printable(true)
                 ->orderable(false)
                 ->width(60)
-                ->addClass('text-center'),  
+                ->addClass('text-center'),
                 
             Column::make('id')
                 ->visible(false)
-                ->orderable(true), 
+                ->orderable(true),
 
             Column::make('name'),
-            Column::make('type'),
-            Column::make('size'),
-            Column::make('weight'),
-            Column::make('qty'),
-            Column::make('rate'),
+            Column::make('valve_type'),
+            Column::make('sku_code'),
+            Column::make('pressure_rating'),
+            Column::make('actuation'),
             Column::make('created_at'),
             Column::computed('action')
                 ->exportable(false)
@@ -133,6 +131,6 @@ class SparePartsDataTable extends DataTable
      */
     protected function filename(): string
     {
-        return 'SpareParts_' . date('YmdHis');
+        return 'Products_' . date('YmdHis');
     }
 }

@@ -21,15 +21,13 @@ class UsersDataTable extends DataTable
      */
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
-        return (new EloquentDataTable($query))
+        return (new EloquentDataTable($query))                 
+            ->addIndexColumn()
             ->addColumn('roles', function(User $user) {
                 return $user->roles->pluck('name')->implode(', ');
             })
             ->editColumn('created_at', function(User $user) {
-                return $user->created_at ? $user->created_at->format('d M Y H:i') : '';
-            })
-            ->editColumn('updated_at', function(User $user) {
-                return $user->updated_at ? $user->updated_at->format('d M Y H:i') : '';
+                return $user->created_at ? $user->created_at->format('d M Y') : '';
             })
             ->addColumn('action', function(User $user) {
                 $btn = '<div class="btn-group" role="group">';
@@ -86,7 +84,7 @@ class UsersDataTable extends DataTable
                     ->setTableId('users-table')
                     ->columns($this->getColumns())
                     ->minifiedAjax()
-                    ->orderBy(1)
+                    ->orderBy(1, 'desc')
                     ->selectStyleSingle()
                     ->scrollX(true)
                     ->autoWidth(false)
@@ -110,12 +108,22 @@ class UsersDataTable extends DataTable
     public function getColumns(): array
     {
         return [
-            Column::make('id'),
+            Column::computed('DT_RowIndex')
+                ->title('S.No')
+                ->exportable(false)
+                ->printable(true)
+                ->orderable(false)
+                ->width(60)
+                ->addClass('text-center'),
+                
+            Column::make('id')
+                ->visible(false)
+                ->orderable(true),
+                
             Column::make('name'),
             Column::make('email'),
             Column::make('roles'),
             Column::make('created_at'),
-            Column::make('updated_at'),
             Column::computed('action')
                 ->exportable(false)
                 ->printable(false)

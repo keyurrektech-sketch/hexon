@@ -7,9 +7,6 @@
         <div class="main-content">
             <div class="row">
                 <div class="row mb-3">
-                    @php
-                    $i = ($spare_parts->currentPage() - 1) * $spare_parts->perPage();
-                    @endphp
                     <!-- [Leads] start -->
                     <div class="col-xxl-8">
                         @session('success')
@@ -30,67 +27,7 @@
                             </div>
                             <div class="card-body custom-card-action p-0">
                                 <div class="table-responsive">
-                                    <table class="table table-hover mb-0">
-                                        <thead>
-                                            <tr class="border-b">
-                                                <th>No</th>
-                                                <th>Name</th>
-                                                <th>Type</th>
-                                                <th>Size</th>
-                                                <th>Weight</th>
-                                                <th>Unit</th>
-                                                <th>Qty</th>
-                                                <th>Minimum Qty</th>
-                                                <th>Rate</th>
-                                                <th>Actions</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach ($spare_parts as $spare_part)
-                                                <tr>
-                                                    <td>{{ ++$i }}</td>
-                                                    <td>{{ $spare_part->name }}</td>
-                                                    <td>{{ $spare_part->type }}</td>
-                                                    <td>{{ $spare_part->size }}</td>
-                                                    <td>{{ $spare_part->weight }}</td>
-                                                    <td>{{ $spare_part->unit }}</td>
-                                                    <td>{{ $spare_part->qty }}</td>
-                                                    <td>{{ $spare_part->minimum_qty }}</td>
-                                                    <td>{{ $spare_part->rate }}</td>
-                                                    <td class="d-flex">
-                                                        @can('part-list')
-                                                            <a class="btn btn-info btn-sm me-2" href="{{ route('spareParts.show', $spare_part->id) }}">
-                                                                <i class="fa-solid fa-list"></i>
-                                                            </a>
-                                                        @endcan
-                                                        @can('part-edit')
-                                                            <a class="btn btn-primary btn-sm me-2" href="{{ route('spareParts.edit', $spare_part->id) }}">
-                                                                <i class="fa-solid fa-pen-to-square"></i>
-                                                            </a>
-                                                        @endcan
-                                                        @can('part-delete')
-                                                            <form method="POST" action="{{ route('spareParts.destroy', $spare_part->id) }}" style="display:inline">
-                                                                @csrf
-                                                                @method('DELETE')
-
-                                                                <button type="submit" class="btn btn-danger btn-sm me-2">
-                                                                    <i class="fa-solid fa-trash"></i>
-                                                                </button>
-                                                            </form>
-                                                        @endcan
-                                                    </td>
-                                                </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                            <div class="card-footer d-flex justify-content-between">
-                                <div>
-                                    Showing {{ $spare_parts->firstItem() }} to {{ $spare_parts->lastItem() }} of {{ $spare_parts->total() }} Parts
-                                </div>
-                                <div>
-                                    {!! $spare_parts->links() !!}
+                                    {{ $dataTable->table() }}
                                 </div>
                             </div>
                         </div>
@@ -101,4 +38,78 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="partModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Parts Details</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div id="partDetails">Loading...</div>
+      </div>
+    </div>
+  </div>
+</div>
 @endsection
+
+@push('scripts')
+    {{ $dataTable->scripts(attributes: ['type' => 'module']) }}
+    
+    <script>
+        $(document).on("click", ".showPart", function () {
+        var id = $(this).data("id");
+
+            $.ajax({
+                url: "{{ url('spareParts') }}/" + id, 
+                type: "GET",
+                success: function (data) {
+                    // assuming your controller returns JSON
+                    let html = `
+                        <table class="table table-striped">
+                            <tr>
+                                <td>Name:</td>
+                                <td> ${data.name}</td>
+                            </tr>
+                            <tr>
+                                <td>Type:</td>
+                                <td> ${data.type}</td>
+                            </tr>
+                            <tr>
+                                <td>Size:</td>
+                                <td> ${data.size}</td>
+                            </tr>
+                            <tr>
+                                <td>Weight:</td>
+                                <td> ${data.weight}</td>
+                            </tr>
+                            <tr>
+                                <td>Quantity:</td>
+                                <td> ${data.qty}</td>
+                            </tr>
+                            <tr>
+                                <td>Minimum Quantity:</td>
+                                <td> ${data.minimum_qty}</td>
+                            </tr>
+                            <tr>
+                                <td>Rate:</td>
+                                <td> ${data.rate}</td>
+                            </tr>
+                            <tr>
+                                <td>Unit:</td>
+                                <td> ${data.unit}</td>
+                            </tr>
+                        </table>
+                    `;
+                    $("#partDetails").html(html);
+                    $("#partModal").modal("show");
+                },
+                error: function(xhr) {
+                    console.error(xhr.responseText);
+                    $("#partDetails").html("<p class='text-danger'>Failed to load data.</p>");
+                }
+            });
+        });
+
+    </script>
+@endpush
