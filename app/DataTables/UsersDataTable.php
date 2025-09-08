@@ -33,9 +33,11 @@ class UsersDataTable extends DataTable
                 $btn = '<div class="btn-group" role="group">';
             
                 if (auth()->user()->can('user-list')) {
-                    $btn .= '<a href="'.route('users.show', $user->id).'" 
-                                class="btn btn-sm btn-info me-2">
-                                <i class="fa fa-eye"></i></a>';
+                    $btn .= '<button type="button" 
+                                class="btn btn-sm btn-info me-2 showUser" 
+                                data-id="'.$user->id.'">
+                                <i class="fa fa-eye"></i>
+                            </button>';
                 }
             
                 if (auth()->user()->can('user-edit')) {

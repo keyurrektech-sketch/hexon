@@ -50,14 +50,21 @@ class RoleController extends Controller
             ->with('success', 'Role created successfully');
     }
 
-    public function show($id): View
+    public function show($id)
     {
-        $role = Role::find($id);
-        $rolePermissions = Permission::join("role_has_permissions", "role_has_permissions.permission_id", "=", "permissions.id")
-            ->where("role_has_permissions.role_id", $id)
-            ->get();
-
-        return view('roles.show', compact('role', 'rolePermissions'));
+        $role = $role = Role::with('permissions:id,name')->findOrFail($id);
+    
+        if (request()->ajax()) {
+            return response()->json([
+                'role' => $role,
+                'permissions' => $role->permissions->toArray(),            
+            ]);
+        }
+    
+        return view('roles.show', [
+            'role' => $role,
+            'rolePermissions' => $role->permissions
+        ]);
     }
 
     public function edit($id): View

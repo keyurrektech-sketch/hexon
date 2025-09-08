@@ -23,7 +23,7 @@
                     @can('user-list')
                         <li class="nxl-item">
                             <a class="nav-link nxl-link" href="{{ route('users.index') }}">
-                                <span class="nxl-micon"><i class="feather-airplay"></i></span>
+                                <span class="nxl-micon"><i class="feather-user"></i></span>
                                 <span class="nxl-mtext">Manage Users</span>
                             </a>
                         </li>
@@ -56,12 +56,22 @@
                         </li>
                     @endcan
 
+                    @can('customer-list')
+                        <li class="nxl-item">
+                            <a class="nav-link nxl-link" href="{{ route('customers.index') }}">
+                                <span class="nxl-micon"><i class="feather-users"></i></span> 
+                                <span class="nxl-mtext">Customers</span>                                
+                            </a>
+                        </li>
+                    @endcan
+
                     <li class="nxl-item">
                         <a class="nav-link nxl-link" href="{{ route('settings.edit') }}">
                             <span class="nxl-micon"><i class="feather-settings"></i></span> 
                             <span class="nxl-mtext">Settings</span>                                
                         </a>
                     </li>
+
 
                 </ul>
             </div>

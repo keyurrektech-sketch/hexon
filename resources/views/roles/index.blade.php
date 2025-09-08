@@ -36,8 +36,56 @@
         </div>
     </div>
 </div>
+<!-- Product Details Modal -->
+<div class="modal fade" id="roleModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Role Details</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div id="roleDetails">Loading...</div>
+      </div>
+    </div>
+  </div>
+</div>
 @endsection
 
 @push('scripts')
     {{ $dataTable->scripts(attributes: ['type' => 'module']) }}
+    <script>
+        $(document).on("click", ".showRole", function () {
+        var id = $(this).data("id");
+
+            $.ajax({
+                url: "/roles/" + id,
+                type: "GET",
+                success: function (data) {
+                    const role = data.role || {};
+                    const perms = data.permissions || [];
+
+                    let permHtml = perms.length
+                        ? perms.map(p => `<span class="badge bg-secondary me-1 mb-2 mt-2">${p.name}</span>`).join('')
+                        : '<em>No permissions</em>';
+
+
+                    let html = `
+                        <table class="table table-striped">
+                            <tr><td>Name:</td><td>${role.name ?? ''}</td></tr>
+                            <tr><td>Permissions:</td><td>${permHtml}</td></tr>
+                        </table>
+                    `;
+
+                    $("#roleDetails").html(html);
+                    $("#roleModal").modal("show");
+                },
+                error: function () {
+                    $("#roleDetails").html("<p class='text-danger'>Failed to load data.</p>");
+                    $("#roleModal").modal("show");
+                }
+            });
+        });
+
+    </script>
 @endpush    

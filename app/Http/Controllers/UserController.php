@@ -65,9 +65,14 @@ class UserController extends Controller
             ->with('success', 'User created successfully');
     }
 
-    public function show($id): View
+    public function show($id)
     {
-        $user = User::find($id);
+        $user = User::with('roles')->find($id); 
+        
+        if (request()->ajax()) {
+            return response()->json($user);
+        }
+
         return view('users.show', compact('user'));
     }
 

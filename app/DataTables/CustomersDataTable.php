@@ -2,50 +2,52 @@
 
 namespace App\DataTables;
 
-use Spatie\Permission\Models\Role;
+use App\Models\Customer;
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Html\Builder as HtmlBuilder;
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
+use Yajra\DataTables\Html\Editor\Editor;
+use Yajra\DataTables\Html\Editor\Fields;
 use Yajra\DataTables\Services\DataTable;
 
-class RolesDataTable extends DataTable
+class CustomersDataTable extends DataTable
 {
     /**
      * Build the DataTable class.
      *
-     * @param QueryBuilder<Role> $query Results from query() method.
+     * @param QueryBuilder<Customer> $query Results from query() method.
      */
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
         return (new EloquentDataTable($query))
             ->addIndexColumn()
-            ->editColumn('created_at', function(Role $role) {
-                return $role->created_at ? $role->created_at->format('d M Y') : '';
+            ->editColumn('created_at', function(Customer $customer) {
+                return $customer->created_at ? $customer->created_at->format('d M Y') : '';
             })
-            ->addColumn('action', function(Role $role) {
+            ->addColumn('action', function(Customer $customer) {
                 $user = auth()->user();
                 $btn = '<div class="btn-group" role="group">';
             
-                if ($user->can('role-list')) {
-                    $btn .=  '<button type="button" 
-                                class="btn btn-sm btn-info me-2 showRole" 
-                                data-id="'.$role->id.'">
+                if ($user->can('customer-list')) {
+                    $btn .= '<button type="button" 
+                                class="btn btn-sm btn-info me-2 showCustomer" 
+                                data-id="'.$customer->id.'">
                                 <i class="fa fa-eye"></i>
                             </button>';
                 }
-                if ($user->can('role-edit')) {
-                    $btn .= '<a href="'.route('roles.edit', $role->id).'" class="btn btn-sm btn-primary me-2">
+                if ($user->can('customer-edit')) {
+                    $btn .= '<a href="'.route('customers.edit', $customer->id).'" class="btn btn-sm btn-primary me-2">
                                 <i class="fa fa-edit"></i></a>';
                 }
-                if ($user->can('role-delete')) {
-                    $btn .= '<form action="'.route('roles.destroy', $role->id).'" method="POST" style="display:inline-block;">
+                if ($user->can('customer-delete')) {
+                    $btn .= '<form action="'.route('customers.destroy', $customer->id).'" method="POST" style="display:inline-block;">
                                 '.csrf_field().method_field("DELETE").'
                                 <button type="submit" class="btn btn-sm btn-danger me-2" 
                                     onclick="return confirm(\'Are you sure?\')">
                                     <i class="fa fa-trash"></i></button>
-                             </form>';
+                            </form>';
                 }
             
                 $btn .= '</div>';
@@ -58,9 +60,9 @@ class RolesDataTable extends DataTable
     /**
      * Get the query source of dataTable.
      *
-     * @return QueryBuilder<Role>
+     * @return QueryBuilder<Customer>
      */
-    public function query(Role $model): QueryBuilder
+    public function query(Customer $model): QueryBuilder
     {
         return $model->newQuery();
     }
@@ -71,7 +73,7 @@ class RolesDataTable extends DataTable
     public function html(): HtmlBuilder
     {
         return $this->builder()
-                    ->setTableId('roles-table')
+                    ->setTableId('customers-table')
                     ->columns($this->getColumns())
                     ->minifiedAjax()
                     ->orderBy(1, 'desc')
@@ -110,7 +112,9 @@ class RolesDataTable extends DataTable
                 ->visible(false)
                 ->orderable(true),
 
-            Column::make('name'),
+            Column::make('first_name'),
+            Column::make('email'),
+            Column::make('user_type'),
             Column::make('created_at'),
             Column::computed('action')
                 ->exportable(false)
@@ -125,6 +129,6 @@ class RolesDataTable extends DataTable
      */
     protected function filename(): string
     {
-        return 'Roles_' . date('YmdHis');
+        return 'Customers_' . date('YmdHis');
     }
 }

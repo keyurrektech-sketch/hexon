@@ -38,8 +38,54 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="userModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">User Details</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div id="userDetails">Loading...</div>
+      </div>
+    </div>
+  </div>
+</div>
+
 @endsection
 
 @push('scripts')
     {{ $dataTable->scripts(attributes: ['type' => 'module']) }}
+    
+    <script>
+        $(document).on("click", ".showUser", function () {
+        var id = $(this).data("id");
+
+            $.ajax({
+                url: "{{ url('users') }}/" + id, 
+                type: "GET",
+                success: function (data) {
+                    // assuming your controller returns JSON
+                    let html = `
+                    <table class="table table-striped">
+                        <tr><td>Name:</td><td>${data.name ?? ''}</td></tr>
+                        <tr><td>Email:</td><td>${data.email ?? ''}</td></tr>
+                        <tr><td>Username:</td><td>${data.username ?? ''}</td></tr>
+                        <tr><td>User Photo:</td><td><img src="/uploads/users/${data.user_photo ?? ''}" height="50" width="50"></td></tr>
+                        <tr><td>Contact Number:</td><td>${data.contact_number ?? ''}</td></tr>
+                        <tr><td>Birthdate:</td><td>${data.birthdate ?? ''}</td></tr>
+                        <tr><td>Roles:</td><td>${data.roles ? data.roles.map(r => r.name).join(', ') : ''}</td></tr>
+                    </table>
+                `;
+                    $("#userDetails").html(html);
+                    $("#userModal").modal("show");
+                },
+                error: function(xhr) {
+                    console.error(xhr.responseText);
+                    $("#userDetails").html("<p class='text-danger'>Failed to load data.</p>");
+                }
+            });
+        });
+
+    </script>
 @endpush
