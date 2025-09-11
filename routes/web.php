@@ -9,6 +9,8 @@ use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\SparePartsController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\FinishedProductController;
+use App\Http\Controllers\NewPurchaseOrderController;
 
 // Redirect root URL to /home if logged in, or to login otherwise
 Route::get('/', function () {
@@ -31,6 +33,8 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('spareParts', SparePartsController::class);
     Route::resource('products', ProductController::class);
     Route::resource('customers', CustomerController::class);
+    Route::resource('finishedProducts', FinishedProductController::class);
+    Route::resource('newPurchaseOrders', NewPurchaseOrderController::class);
 
     Route::get('/settings/edit', [SettingsController::class, 'edit'])->name('settings.edit');
     Route::post('/settings/update', [SettingsController::class, 'update'])->name('settings.update');

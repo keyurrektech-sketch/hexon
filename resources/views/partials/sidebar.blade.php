@@ -56,6 +56,15 @@
                         </li>
                     @endcan
 
+                    @can('finished-product-list')
+                        <li class="nxl-item">
+                            <a class="nav-link nxl-link" href="{{ route('finishedProducts.index') }}">
+                                <span class="nxl-micon"><i class="feather-box"></i></span> 
+                                <span class="nxl-mtext">Finished Products</span>                                
+                            </a>
+                        </li>
+                    @endcan
+
                     @can('customer-list')
                         <li class="nxl-item">
                             <a class="nav-link nxl-link" href="{{ route('customers.index') }}">
@@ -69,6 +78,13 @@
                         <a class="nav-link nxl-link" href="{{ route('settings.edit') }}">
                             <span class="nxl-micon"><i class="feather-settings"></i></span> 
                             <span class="nxl-mtext">Settings</span>                                
+                        </a>
+                    </li>
+
+                    <li class="nxl-item">
+                        <a class="nav-link nxl-link" href="{{ route('newPurchaseOrders.index') }}">
+                            <span class="nxl-micon"><i class="feather-file-text"></i></span> 
+                            <span class="nxl-mtext">New Purchase Orders</span>
                         </a>
                     </li>
 
