@@ -79,4 +79,14 @@ class CustomerController extends Controller
         $customer->delete();
         return redirect()->route('customers.index')->with('success', 'Customer Deleted Successfully');
     }
+
+    public function getCustomerDetails($id)
+    {
+        $customer = Customer::findOrFail($id);
+
+        return response()->json([
+            'address' => $customer->address,
+        ]);
+    }
+
 }

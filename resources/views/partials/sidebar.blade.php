@@ -59,7 +59,7 @@
                     @can('finished-product-list')
                         <li class="nxl-item">
                             <a class="nav-link nxl-link" href="{{ route('finishedProducts.index') }}">
-                                <span class="nxl-micon"><i class="feather-box"></i></span> 
+                                <span class="nxl-micon"><i class="feather-package"></i></span> 
                                 <span class="nxl-mtext">Finished Products</span>                                
                             </a>
                         </li>
@@ -73,6 +73,22 @@
                             </a>
                         </li>
                     @endcan
+                    
+                    <li class="nxl-item">
+                        <a class="nav-link nxl-link" href="{{ route('newPurchaseOrders.index') }}">
+                            <span class="nxl-micon"><i class="feather-file-text"></i></span> 
+                            <span class="nxl-mtext">New Purchase Orders</span>
+                        </a>
+                    </li>
+                    
+                    <li class="nxl-item">
+                        <a class="nav-link nxl-link" href="{{ route('rejections.index') }}">
+                            <span class="nxl-micon"><i class="feather-file-text"></i></span> 
+                            <span class="nxl-mtext">Internal Rejections</span>
+                        </a>
+                    </li>
+
+
 
                     <li class="nxl-item">
                         <a class="nav-link nxl-link" href="{{ route('settings.edit') }}">
@@ -81,12 +97,6 @@
                         </a>
                     </li>
 
-                    <li class="nxl-item">
-                        <a class="nav-link nxl-link" href="{{ route('newPurchaseOrders.index') }}">
-                            <span class="nxl-micon"><i class="feather-file-text"></i></span> 
-                            <span class="nxl-mtext">New Purchase Orders</span>
-                        </a>
-                    </li>
 
 
                 </ul>

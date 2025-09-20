@@ -11,6 +11,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\FinishedProductController;
 use App\Http\Controllers\NewPurchaseOrderController;
+use App\Http\Controllers\RejectionController;
 
 // Redirect root URL to /home if logged in, or to login otherwise
 Route::get('/', function () {
@@ -39,4 +40,12 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/settings/edit', [SettingsController::class, 'edit'])->name('settings.edit');
     Route::post('/settings/update', [SettingsController::class, 'update'])->name('settings.update');
 
+    Route::get('/customer/{id}/details', [CustomerController::class, 'getCustomerDetails'])->name('customer.details');
+        
+    Route::get('/newPurchaseOrders/{id}/receive', [NewPurchaseOrderController::class, 'receive'])->name('newPurchaseOrders.receive');
+    Route::post('/newPurchaseOrders/{id}/receive', [NewPurchaseOrderController::class, 'storeReceivedQuantity'])->name('newPurchaseOrders.receive.store');
+
+    Route::get('/newPurchaseOrders/{id}/download', [NewPurchaseOrderController::class, 'download'])->name('newPurchaseOrders.download');
+
+    Route::resource('rejections', RejectionController::class);
 });
