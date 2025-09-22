@@ -13,6 +13,10 @@ return new class extends Migration
     {
         Schema::create('rejections', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained();
+            $table->foreignId('spare_part_id')->constrained('spare_parts')->onDelete('cascade');
+            $table->integer('qty')->default(0);
+            $table->text('reason')->nullable();
             $table->timestamps();
         });
     }

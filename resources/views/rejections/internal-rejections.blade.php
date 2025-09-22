@@ -9,11 +9,11 @@
                     <div class="row mb-3">
                         <!-- [Leads] start -->
                         <div class="col-xxl-12">
-                            @session('success')
+                            @if(session('success'))
                                 <div class="alert alert-success" role="alert"> 
                                     {{ session('success') }}
                                 </div>
-                            @endsession
+                            @endif
                             <div class="card stretch stretch-full">
                                 <div class="card-header">
                                     <h5 class="card-title">Internal Rejection Parts</h5>
@@ -25,6 +25,7 @@
                                 </div>
                                 <div class="card-body custom-card-action p-0">
                                     <div class="table-responsive">
+                                        {!! $dataTable->table() !!}
                                     </div>
                                 </div>
                             </div>
@@ -53,4 +54,6 @@
 @endsection
 
 @push('scripts')
+    {{-- DataTable Scripts --}}
+    {!! $dataTable->scripts() !!}
 @endpush
