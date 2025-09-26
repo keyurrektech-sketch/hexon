@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Settings;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Storage; 
 
 class SettingsController extends Controller
 {
@@ -14,11 +15,10 @@ class SettingsController extends Controller
         return view('admin.settings', compact('settings'));
     }
 
-    
     public function update(Request $request)
     {
         $settings = Settings::first();
-    
+
         $validated = $request->validate([
             'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048', 
             'name' => 'required|max:255',
@@ -43,30 +43,29 @@ class SettingsController extends Controller
             'youtube' => 'nullable|url|max:255',
             'authorized_signatory' => 'nullable|image|mimes:png,jpg,jpeg|max:2048',
         ]);
-    
-        // handle file uploads
+
+        // Handle file uploads with storage
         foreach (['logo', 'favicon', 'authorized_signatory'] as $field) {
             if ($request->hasFile($field)) {
+                // delete old file if exists
                 if (!empty($settings?->$field)) {
-                    $oldPath = public_path('uploads/' . $settings->$field);
-                    if (file_exists($oldPath)) {
-                        unlink($oldPath);
-                    }
+                    Storage::disk('public')->delete('uploads/' . $settings->$field);
                 }
-                $image = $request->file($field);
-                $image_name = uniqid() . "." . $image->getClientOriginalExtension();
-                $image->move(public_path('uploads'), $image_name);
-                $validated[$field] = $image_name;
+
+                // store and get filename only
+                $path = $request->file($field)->store('uploads', 'public');
+                $filename = basename($path);
+                $validated[$field] = $filename;
             }
         }
-    
-        // create or update
+
+        // create or update settings
         if ($settings) {
             $settings->update($validated);
         } else {
             $settings = Settings::create($validated);
         }
-    
+
         return redirect()->route('settings.edit')->with('success', 'Settings Updated Successfully');
     }
     

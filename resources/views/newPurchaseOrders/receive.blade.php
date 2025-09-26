@@ -39,7 +39,7 @@
                                         </div>
                                         <div class="col-md-4">
                                             <label for="client_name" class="form-label">Client Name</label>
-                                            <input type="text" class="form-control" id="client_name" value="{{ $purchaseOrder->customer->name }}" readonly>
+                                            <input type="text" class="form-control" id="client_name" value="{{ $purchaseOrder->customer->first_name }}" readonly>
                                         </div>
                                         <div class="col-md-4">
                                             <label for="status" class="form-label">Status</label>

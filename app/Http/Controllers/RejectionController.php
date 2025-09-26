@@ -52,6 +52,47 @@ class RejectionController extends Controller
         return redirect()->route('rejections.index')->with('success', 'Rejections saved successfully.');
     }
 
+    public function edit($id)
+    {
+        $rejection = Rejection::findOrFail($id);
+        $spareParts = SpareParts::all();
+        return view('rejections.add-internal-rejection', compact('rejection', 'spareParts'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'spare_part_id' => 'required|exists:spare_parts,id',
+            'qty' => 'required|integer|min:1',
+            'reason' => 'nullable|string',
+        ]);
+
+        $rejection = Rejection::findOrFail($id);
+        
+        // Store the original quantity for stock adjustment
+        $originalQty = $rejection->qty;
+        $newQty = $request->qty;
+        
+        // Update the rejection
+        $rejection->update([
+            'spare_part_id' => $request->spare_part_id,
+            'qty' => $newQty,
+            'reason' => $request->reason,
+        ]);
+
+        // Adjust stock: restore original quantity and deduct new quantity
+        $sparePart = $rejection->sparePart;
+        if ($sparePart) {
+            // Restore original quantity
+            $sparePart->qty += $originalQty;
+            // Deduct new quantity
+            $sparePart->qty = max(0, $sparePart->qty - $newQty);
+            $sparePart->save();
+        }
+
+        return redirect()->route('rejections.index')->with('success', 'Rejection updated successfully.');
+    }
+
     public function destroy($id)
     {
         $rejection = Rejection::findOrFail($id);

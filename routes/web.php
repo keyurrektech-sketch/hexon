@@ -12,6 +12,8 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\FinishedProductController;
 use App\Http\Controllers\NewPurchaseOrderController;
 use App\Http\Controllers\RejectionController;
+use App\Http\Controllers\CustomerRejectionController;
+use App\Http\Controllers\SaleController;
 
 // Redirect root URL to /home if logged in, or to login otherwise
 Route::get('/', function () {
@@ -36,6 +38,7 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('customers', CustomerController::class);
     Route::resource('finishedProducts', FinishedProductController::class);
     Route::resource('newPurchaseOrders', NewPurchaseOrderController::class);
+    Route::resource('sales', SaleController::class);
 
     Route::get('/settings/edit', [SettingsController::class, 'edit'])->name('settings.edit');
     Route::post('/settings/update', [SettingsController::class, 'update'])->name('settings.update');
@@ -46,6 +49,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/newPurchaseOrders/{id}/receive', [NewPurchaseOrderController::class, 'storeReceivedQuantity'])->name('newPurchaseOrders.receive.store');
 
     Route::get('/newPurchaseOrders/{id}/download', [NewPurchaseOrderController::class, 'download'])->name('newPurchaseOrders.download');
+    Route::get('/sales/{id}/download', [SaleController::class, 'download'])->name('sales.download');
 
     Route::resource('rejections', RejectionController::class);
+    Route::resource('customerRejections', CustomerRejectionController::class);
 });

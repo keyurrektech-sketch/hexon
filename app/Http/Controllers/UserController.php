@@ -11,6 +11,7 @@ use Illuminate\Support\Arr;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
 use App\DataTables\UsersDataTable;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
@@ -41,25 +42,15 @@ class UserController extends Controller
         $input = $request->all();
         $input['password'] = Hash::make($input['password']);
 
-        if ($request->hasFile('user_photo'))
-        {
-            $image = $request->file('user_photo');
-            $image_name = uniqid().".".$image->getClientOriginalExtension();
-            $destination_path = public_path('uploads/users');
-            if (!file_exists($destination_path))
-            {
-                mkdir($destination_path, 0755, true);
-            }
-            if (file_exists($destination_path))
-            {
-                $image->move($destination_path, $image_name);
-            }
+        if ($request->hasFile('user_photo')) {
+
+            $path = $request->file('user_photo')->store('users', 'public');
+
+            $input['user_photo'] = basename($path);
         }
-        $input['user_photo'] = $image_name;
 
         $user = User::create($input);
         $user->assignRole($request->input('roles'));
-
 
         return redirect()->route('users.index')
             ->with('success', 'User created successfully');
@@ -96,45 +87,32 @@ class UserController extends Controller
             'password' => 'same:confirm-password',
             'roles' => 'required'
         ]);
-    
+
         $input = $request->all();
-    
+
         if (!empty($input['password'])) {
             $input['password'] = Hash::make($input['password']);
         } else {
             $input = Arr::except($input, ['password']);
         }
-        
+
         $user = User::findOrFail($id);
 
-        if($request->hasFile('user_photo'))
-        {
-            if (isset($user->user_photo))
-            {
-                $destination_path = public_path('uploads/users/'.$user->user_photo);
-                unlink($destination_path);
+        if ($request->hasFile('user_photo')) {
+
+            if (!empty($user->user_photo)) {
+                Storage::disk('public')->delete('users/' . $user->user_photo); 
             }
-            
-            $image = $request->file('user_photo');
-            $image_name = uniqid().".".$image->getClientOriginalExtension();
-            $destination_path = public_path('uploads/users/');
-            if (!file_exists($destination_path))
-            {
-                mkdir($destination_path, 0755, true);
-            }
-            if (file_exists($destination_path))
-            {
-                $image->move($destination_path, $image_name);
-            }
-            $input['user_photo'] = $image_name;
-        }                
+
+            $path = $request->file('user_photo')->store('users', 'public');
+
+            $input['user_photo'] = basename($path);
+        }
 
         $user->update($input);
-    
-        // Sync roles
+
         DB::table('model_has_roles')->where('model_id', $id)->delete();
         $user->assignRole($request->input('roles'));
-
 
         return redirect()->route('users.index')
             ->with('success', 'User updated successfully');
@@ -142,15 +120,14 @@ class UserController extends Controller
 
     public function destroy($id): RedirectResponse
     {
-        $user = User::find($id);
+        $user = User::findOrFail($id);
 
-        if ($user->user_photo)
-        {
-            $destination_path = public_path('uploads/users/').$user->user_photo;
-            unlink($destination_path);
+        if (!empty($user->user_photo)) {
+            Storage::disk('public')->delete('users/' . $user->user_photo);
         }
+
         $user->delete();
-        
+
         return redirect()->route('users.index')
             ->with('success', 'User deleted successfully');
     }

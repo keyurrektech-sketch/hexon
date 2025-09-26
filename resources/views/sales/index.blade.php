@@ -16,36 +16,38 @@
                             @endsession
                             <div class="card stretch stretch-full">
                                 <div class="card-header">
-                                    <h5 class="card-title">New Purchase Order</h5>
+                                    <h5 class="card-title">Sales</h5>
                                     <div class="card-header-action">                      
-                                        <a class="btn btn-success btn-sm" href="{{ route('newPurchaseOrders.create') }}">
-                                            <i class="fa fa-plus"></i> Add New Purchase Orders
-                                        </a>
+                                        @can('product-create')
+                                            <a class="btn btn-success btn-sm" href="{{ route('sales.create') }}">
+                                                <i class="fa fa-plus"></i> Add Sales
+                                            </a>
+                                        @endcan
                                     </div>
                                 </div>
                                 <div class="card-body custom-card-action p-0">
                                     <div class="table-responsive">
-                                        {{ $dataTable->table() }}
+                                        {!! $dataTable->table() !!}
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <!-- [Leads] end -->
-                    </div>
+                    </div>  
                 </div>
             </div>
         </div>
     </main>
     <!-- Product Details Modal -->
-    <div class="modal fade" id="newPurchaseModal" tabindex="-1" aria-hidden="true">
+    <div class="modal fade" id="saleModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Product Details</h5>
+                    <h5 class="modal-title">Sale Details</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <div id="newPurchaseDetails">Loading...</div>
+                    <div id="saleDetails">Loading...</div>
                 </div>
             </div>
         </div>
@@ -53,15 +55,14 @@
 
 @endsection
 
-
 @push('scripts')
-    {{ $dataTable->scripts(attributes: ['type' => 'module']) }}
+    {!! $dataTable->scripts() !!}
     <script>
         $(document).on("click", ".showSale", function () {
         var id = $(this).data("id");
 
             $.ajax({
-                url: "/newPurchaseOrders/" + id,
+                url: "/sales/" + id,
                 type: "GET",
                 success: function (data) {
                     let html = `
@@ -80,28 +81,24 @@
                                 <td>${data.status}</td>
                             </tr>
                             <tr>
-                                <td>PO Revision & Date:</td>
-                                <td>${data.po_revision_and_date}</td>
+                                <td>Create Date:</td>
+                                <td>${data.create_date}</td>
                             </tr>
                             <tr>
-                                <td>Reason of Revision:</td>
-                                <td>${data.reason_of_revision}</td>
+                                <td>Due Date:</td>
+                                <td>${data.due_date}</td>
                             </tr>
                             <tr>
-                                <td>Quotation Ref No:</td>
-                                <td>${data.quotation_ref_no}</td>
+                                <td>Order NO:</td>
+                                <td>${data.orderno}</td>
                             </tr>
                             <tr>
-                                <td>Remarks:</td>
-                                <td>${data.remarks}</td>
+                                <td>L.R. NO:</td>
+                                <td>${data.lrno}</td>
                             </tr>
                             <tr>
-                                <td>P.R. No:</td>
-                                <td>${data.pr_no}</td>
-                            </tr>
-                            <tr>
-                                <td>P.R. Date:</td>
-                                <td>${data.pr_date}</td>
+                                <td>Transport:</td>
+                                <td>${data.transport}</td>
                             </tr>
                             <tr>
                                 <td>Address:</td>
@@ -113,12 +110,12 @@
                             </tr>
                         </table>
                     `;
-                    $("#newPurchaseDetails").html(html);
-                    $("#newPurchaseModal").modal("show");
+                    $("#saleDetails").html(html);
+                    $("#saleModal").modal("show");
                 },
                 error: function () {
-                    $("#newPurchaseDetails").html("<p class='text-danger'>Failed to load data.</p>");
-                    $("#newPurchaseModal").modal("show");
+                    $("#saleDetails").html("<p class='text-danger'>Failed to load data.</p>");
+                    $("#saleModal").modal("show");
                 }
             });
         });

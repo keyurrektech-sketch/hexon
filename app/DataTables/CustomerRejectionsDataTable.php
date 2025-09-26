@@ -2,7 +2,7 @@
 
 namespace App\DataTables;
 
-use App\Models\Rejection;
+use App\Models\CustomerRejection;
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Html\Builder as HtmlBuilder;
@@ -12,38 +12,31 @@ use Yajra\DataTables\Html\Editor\Editor;
 use Yajra\DataTables\Html\Editor\Fields;
 use Yajra\DataTables\Services\DataTable;
 
-class RejectionsDataTable extends DataTable
+class CustomerRejectionsDataTable extends DataTable
 {
     /**
      * Build the DataTable class.
      *
-     * @param QueryBuilder<Rejection> $query Results from query() method.
+     * @param QueryBuilder<CustomerRejection> $query Results from query() method.
      */
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
         return (new EloquentDataTable($query))
             ->addIndexColumn()
-            ->editColumn('created_at', function(Rejection $rejection) {
-                return $rejection->created_at ? $rejection->created_at->format('d M Y') : '';
+            ->addColumn('product_name', function(CustomerRejection $customerRejection) {
+                return $customerRejection->product?->name ?? 'N/A';
             })
-            ->addColumn('spare_part', function (Rejection $rejection) {
-                return $rejection->sparePart ? $rejection->sparePart->name : '-';
+            ->editColumn('created_at', function(CustomerRejection $customerRejection) {
+                return $customerRejection->created_at ? $customerRejection->created_at->format('d M Y') : '';
             })
-            ->addColumn('action', function (Rejection $rejection) {
-                // Edit and Delete buttons
+            ->addColumn('action', function(CustomerRejection $customerRejection) {
+                $user = auth()->user();
                 $btn = '<div class="btn-group" role="group">';
-                $btn .= '<a href="'.route('rejections.edit', $rejection->id).'" class="btn btn-sm btn-primary me-1">
-                                <i class="fa fa-edit"></i>
-                              </a>';
-                
-                $btn .= '<form action="'.route('rejections.destroy', $rejection->id).'" 
-                            method="POST" style="display:inline-block;">
-                            '.csrf_field().method_field("DELETE").'
-                            <button type="submit" class="btn btn-sm btn-danger"
-                                onclick="return confirm(\'Are you sure?\')">
-                                <i class="fa fa-trash"></i>
-                            </button>
-                        </form>';
+                    $btn .= '<button type="button" 
+                                class="btn btn-sm btn-info me-2 showCustomerRejectionParts" 
+                                data-id="'.$customerRejection->id.'">
+                                <i class="fa fa-eye"></i>
+                            </button>';
                 $btn .= '</div>';
                 return $btn;
             })
@@ -54,11 +47,11 @@ class RejectionsDataTable extends DataTable
     /**
      * Get the query source of dataTable.
      *
-     * @return QueryBuilder<Rejection>
+     * @return QueryBuilder<CustomerRejection>
      */
-    public function query(Rejection $model): QueryBuilder
+    public function query(CustomerRejection $model): QueryBuilder
     {
-        return $model->newQuery();
+        return $model->newQuery()->with('product');
     }
 
     /**
@@ -67,10 +60,10 @@ class RejectionsDataTable extends DataTable
     public function html(): HtmlBuilder
     {
         return $this->builder()
-                    ->setTableId('rejections-table')
+                    ->setTableId('customerrejections-table')
                     ->columns($this->getColumns())
                     ->minifiedAjax()
-                    ->orderBy(1)
+                    ->orderBy(1, 'desc')
                     ->selectStyleSingle()
                     ->scrollX(true)
                     ->autoWidth(false)
@@ -101,18 +94,20 @@ class RejectionsDataTable extends DataTable
                 ->orderable(false)
                 ->width(60)
                 ->addClass('text-center'),
+                
+            Column::make('id')
+                ->visible(false)
+                ->orderable(true),
 
-            Column::make('id')->visible(false),
-            Column::make('user_id')->title('User Id'),
-            Column::make('spare_part')->title('Spare Part'),
-            Column::make('qty')->title('Quantity'),
-            Column::make('reason')->title('Reason'),
-            Column::make('created_at')->title('Created At'),
-
+            
+            Column::make('product_name')->title('Product Name'),
+            Column::make('type'),
+            Column::make('quantity'),
+            Column::make('created_at'),
             Column::computed('action')
                 ->exportable(false)
                 ->printable(false)
-                ->width(100)
+                ->width(200)
                 ->addClass('text-center'),
         ];
     }
@@ -122,6 +117,6 @@ class RejectionsDataTable extends DataTable
      */
     protected function filename(): string
     {
-        return 'Rejections_' . date('YmdHis');
+        return 'CustomerRejections_' . date('YmdHis');
     }
 }

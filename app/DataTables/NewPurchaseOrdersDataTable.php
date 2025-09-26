@@ -107,7 +107,7 @@ namespace App\DataTables;
                         ->setTableId('newpurchaseorders-table')
                         ->columns($this->getColumns())
                         ->minifiedAjax()
-                        ->orderBy(1)
+                        ->orderBy(1, 'desc')
                         ->selectStyleSingle()
                         ->scrollX(true)
                         ->autoWidth(false)

@@ -4,12 +4,8 @@
                 <a href="{{ route('home') }}" class="b-brand">
                     @if(!empty($settings) && !empty($settings->logo))
                         <!-- Display uploaded logo -->
-                        <img src="{{ asset('uploads/'.$settings->logo) }}" alt="Logo" class="logo logo-lg" style="max-height:40px;" />
-                        <img src="{{ asset('uploads/'.$settings->logo) }}" alt="Small Logo" class="logo logo-sm" style="max-height:30px;" />
-                    @else
-                        <!-- Fallback default logos -->
-                        <h1 class="logo logo-lg">{{ $settings->name ?? '' }}</h1>
-                        <h1 class="logo logo-sm">{{ $settings->name ?? ''}}</h1>
+                        <img src="{{ asset('storage/uploads/' . $settings->logo) }}" alt="" class="logo logo-lg" style="width: 160px;"/>
+                        <img src="{{ asset('storage/uploads/' . $settings->favicon) }}" alt="" class="logo logo-sm" />
                     @endif
                 </a>
             </div>
@@ -87,8 +83,20 @@
                             <span class="nxl-mtext">Internal Rejections</span>
                         </a>
                     </li>
-
-
+                    
+                    <li class="nxl-item">
+                        <a class="nav-link nxl-link" href="{{ route('customerRejections.index') }}">
+                            <span class="nxl-micon"><i class="feather-file-text"></i></span> 
+                            <span class="nxl-mtext">Customer Rejections</span>
+                        </a>
+                    </li>
+                    
+                    <li class="nxl-item">
+                        <a class="nav-link nxl-link" href="{{ route('sales.index') }}">
+                            <span class="nxl-micon"><i class="feather-file-text"></i></span> 
+                            <span class="nxl-mtext">Sales</span>
+                        </a>
+                    </li>
 
                     <li class="nxl-item">
                         <a class="nav-link nxl-link" href="{{ route('settings.edit') }}">
@@ -177,12 +185,12 @@
                     </div>
                     <div class="dropdown nxl-h-item">
                         <a href="javascript:void(0);" data-bs-toggle="dropdown" role="button" data-bs-auto-close="outside">
-                            <img src="{{ Auth::user()->user_photo ? asset('uploads/users/'. Auth::user()->user_photo ) : asset('uploads/user.png') }}" alt="user-image" class="img-fluid user-avtar me-0" />
+                            <img src="{{ Auth::user()->user_photo ? asset('storage/users/' . Auth::user()->user_photo) : asset('uploads/user.png') }}" alt="user-image" class="img-fluid user-avtar me-0" />
                         </a>
                         <div class="dropdown-menu dropdown-menu-end nxl-h-dropdown nxl-user-dropdown">
                             <div class="dropdown-header">
                                 <div class="d-flex align-items-center">
-                                    <img src="{{ Auth::user()->user_photo ? asset('uploads/users/'. Auth::user()->user_photo ) : asset('uploads/user.png') }}" alt="user-image" class="img-fluid user-avtar" />
+                                    <img src="{{ Auth::user()->user_photo ? asset('storage/users/' . Auth::user()->user_photo) : asset('uploads/user.png') }}" alt="user-image" class="img-fluid user-avtar" />
                                     <div>
                                         <a href="{{ route('users.edit', Auth::user()->id) }}">
                                             <h6 class="text-dark mb-0">{{ Auth::user()->name ?? ''}}</h6>

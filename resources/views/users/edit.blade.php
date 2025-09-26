@@ -86,8 +86,8 @@
                                                 <label for="user_photo" class="form-label">Old User Photo</label>
                                             </div>
                                             <div class="col-md-6">
-                                                <a href="{{ asset('uploads/users/'.$user->user_photo) }}" target="_blank">
-                                                    <img src="{{ asset('uploads/users/'.$user->user_photo) }}" alt="{{$user->user_photo}}" width="50">
+                                                <a href="{{ asset('storage/users/' . $user->user_photo) }}" target="_blank">
+                                                    <img src="{{ asset('storage/users/' . $user->user_photo) }}" alt="{{$user->user_photo}}" width="50">
                                                 </a>                    
                                             </div>
                                         </div>

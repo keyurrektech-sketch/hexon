@@ -21,7 +21,7 @@
 
     <!--! BEGIN: Favicon-->
     <link rel="shortcut icon" type="image/x-icon" 
-          href="{{ $settings && $settings->favicon ? asset('uploads/'.$settings->favicon) : asset('uploads/user.png') }}">
+          href="{{ $settings && $settings->favicon ? asset('storage/uploads/' . $settings->favicon) : '' }}">
     <!--! END: Favicon-->
 
     <!--! BEGIN: Bootstrap CSS-->

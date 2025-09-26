@@ -265,10 +265,9 @@ class NewPurchaseOrderController extends Controller
         // Convert logo to base64
         $logoBase64 = null;
         if ($settings && $settings->logo) {
-            $logoPath = public_path('uploads/' . $settings->logo);
-
+            $logoPath = storage_path('app/public/uploads/' . $settings->logo);
             if (File::exists($logoPath)) {
-                $logoType = pathinfo($logoPath, PATHINFO_EXTENSION);
+                $logoType = strtolower(pathinfo($logoPath, PATHINFO_EXTENSION));
                 $logoData = file_get_contents($logoPath);
                 $logoBase64 = 'data:image/' . $logoType . ';base64,' . base64_encode($logoData);
             }
@@ -276,9 +275,9 @@ class NewPurchaseOrderController extends Controller
 
         $signatureBase64 = null;
         if ($settings && $settings->authorized_signatory) {
-            $signaturePath = public_path('uploads/' . $settings->authorized_signatory);
+            $signaturePath = storage_path('app/public/uploads/' . $settings->authorized_signatory);
             if (File::exists($signaturePath)) {
-                $sigType = pathinfo($signaturePath, PATHINFO_EXTENSION);
+                $sigType = strtolower(pathinfo($signaturePath, PATHINFO_EXTENSION));
                 $sigData = file_get_contents($signaturePath);
                 $signatureBase64 = 'data:image/' . $sigType . ';base64,' . base64_encode($sigData);
             }
