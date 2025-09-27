@@ -5,7 +5,7 @@
         <div class="auth-minimal-inner">
             <div class="minimal-card-wrapper">
                 <div class="card mb-4 mt-5 mx-4 mx-sm-0 position-relative">
-                    <div class="wd-50 bg-white p-2 rounded-circle shadow-lg position-absolute translate-middle top-0 start-50">
+                    <div class="wd-100 bg-white p-2 rounded-circle shadow-lg position-absolute translate-middle top-0 start-50">
                         <img src="{{ $settings && $settings->logo ? asset('storage/uploads/' . $settings->logo) : asset('uploads/user.png')}}" alt="" class="img-fluid">
                     </div>
                     <div class="card-body p-sm-5">

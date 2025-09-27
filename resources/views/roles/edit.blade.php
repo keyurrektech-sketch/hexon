@@ -50,13 +50,28 @@
                                             <label for="permInput" class="fw-semibold">Permissions: </label>
                                         </div>
                                         <div class="col-lg-8">
-                                            @foreach($permission as $value)
-                                                <label>
-                                                    <input type="checkbox" name="permission[{{$value->id}}]" id="permInput" value="{{$value->id}}" class="name" {{ in_array($value->id, $rolePermissions) ? 'checked' : '' }} >
-                                                    {{ $value->name }}
-                                                </label>
-                                                <br/>
-                                            @endforeach
+                                            <div class="accordion" id="permissionsAccordion">
+                                                @foreach($permissions as $group => $perms)
+                                                    <div class="accordion-item mb-2">
+                                                        <h2 class="accordion-header" id="heading-{{ $group }}">
+                                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{ $group }}" aria-expanded="false" aria-controls="collapse-{{ $group }}">
+                                                                {{ ucfirst($group) }} Permissions
+                                                            </button>
+                                                        </h2>
+                                                        <div id="collapse-{{ $group }}" class="accordion-collapse collapse" aria-labelledby="heading-{{ $group }}" data-bs-parent="#permissionsAccordion">
+                                                            <div class="accordion-body">
+                                                                @foreach($perms as $perm)
+                                                                    <label>
+                                                                        <input type="checkbox" name="permission[{{ $perm->id }}]" value="{{ $perm->id }}" class="me-1"
+                                                                            {{ in_array($perm->id, $rolePermissions) ? 'checked' : '' }}>
+                                                                        {{ $perm->name }}
+                                                                    </label><br>
+                                                                @endforeach
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+                                            </div>
                                         </div>
                                     </div>      
                                     <div class="row mb-4 align-items-center">

@@ -16,97 +16,104 @@
                         <label>Navigation</label>
                     </li>   
                     
-                    @can('user-list')
+                    @if(auth()->user()->can('user-list') || auth()->user()->can('user-create') || auth()->user()->can('user-edit') || auth()->user()->can('user-delete'))
                         <li class="nxl-item">
                             <a class="nav-link nxl-link" href="{{ route('users.index') }}">
                                 <span class="nxl-micon"><i class="feather-user"></i></span>
                                 <span class="nxl-mtext">Manage Users</span>
                             </a>
                         </li>
-                    @endcan                    
+                    @endif                 
                              
-                    @can('role-list')
+                    @if(auth()->user()->can('role-list') || auth()->user()->can('role-create') || auth()->user()->can('role-edit') || auth()->user()->can('role-delete'))
                         <li class="nxl-item">
                             <a class="nav-link nxl-link" href="{{ route('roles.index') }}">
-                                <span class="nxl-micon"><i class="feather-airplay"></i></span> 
+                                <span class="nxl-micon"><i class="feather-check-square"></i></span> 
                                 <span class="nxl-mtext">Manage Roles</span>                                
                             </a>
                         </li>
-                    @endcan
+                    @endif
 
-                    @can('part-list')
+                    @if(auth()->user()->can('part-list') || auth()->user()->can('part-create') || auth()->user()->can('part-edit') || auth()->user()->can('part-delete'))
                         <li class="nxl-item">
                             <a class="nav-link nxl-link" href="{{ route('spareParts.index') }}">
                                 <span class="nxl-micon"><i class="feather-tool"></i></span> 
                                 <span class="nxl-mtext">Parts</span>                                
                             </a>
                         </li>
-                    @endcan
+                    @endif
 
-                    @can('product-list')
+                    @if(auth()->user()->can('product-list') || auth()->user()->can('product-create') || auth()->user()->can('product-edit') || auth()->user()->can('product-delete'))
                         <li class="nxl-item">
                             <a class="nav-link nxl-link" href="{{ route('products.index') }}">
                                 <span class="nxl-micon"><i class="feather-box"></i></span> 
                                 <span class="nxl-mtext">Products</span>                                
                             </a>
                         </li>
-                    @endcan
+                    @endif
 
-                    @can('finished-product-list')
+                    @if(auth()->user()->can('finished-product-list') || auth()->user()->can('finished-product-create') || auth()->user()->can('finished-product-edit') || auth()->user()->can('finished-product-delete'))
                         <li class="nxl-item">
                             <a class="nav-link nxl-link" href="{{ route('finishedProducts.index') }}">
                                 <span class="nxl-micon"><i class="feather-package"></i></span> 
                                 <span class="nxl-mtext">Finished Products</span>                                
                             </a>
                         </li>
-                    @endcan
+                    @endif
 
-                    @can('customer-list')
+                    @if(auth()->user()->can('customer-list') || auth()->user()->can('customer-create') || auth()->user()->can('customer-edit') || auth()->user()->can('customer-delete'))
                         <li class="nxl-item">
                             <a class="nav-link nxl-link" href="{{ route('customers.index') }}">
                                 <span class="nxl-micon"><i class="feather-users"></i></span> 
                                 <span class="nxl-mtext">Customers</span>                                
                             </a>
                         </li>
-                    @endcan
+                    @endif
                     
-                    <li class="nxl-item">
-                        <a class="nav-link nxl-link" href="{{ route('newPurchaseOrders.index') }}">
-                            <span class="nxl-micon"><i class="feather-file-text"></i></span> 
-                            <span class="nxl-mtext">New Purchase Orders</span>
-                        </a>
-                    </li>
+                    @if(auth()->user()->can('purchaseOrder-list') || auth()->user()->can('purchaseOrder-create') || auth()->user()->can('purchaseOrder-edit') || auth()->user()->can('purchaseOrder-delete'))
+                        <li class="nxl-item">
+                            <a class="nav-link nxl-link" href="{{ route('newPurchaseOrders.index') }}">
+                                <span class="nxl-micon"><i class="feather-clipboard"></i></span> 
+                                <span class="nxl-mtext">New Purchase Orders</span>
+                            </a>
+                        </li>
+                    @endif  
                     
-                    <li class="nxl-item">
-                        <a class="nav-link nxl-link" href="{{ route('rejections.index') }}">
-                            <span class="nxl-micon"><i class="feather-file-text"></i></span> 
-                            <span class="nxl-mtext">Internal Rejections</span>
-                        </a>
-                    </li>
+                    @if(auth()->user()->can('internalRejections-create') || auth()->user()->can('internalRejections-edit') || auth()->user()->can('internalRejections-delete'))
+                        <li class="nxl-item">
+                            <a class="nav-link nxl-link" href="{{ route('rejections.index') }}">
+                                <span class="nxl-micon"><i class="feather-alert-triangle"></i></span> 
+                                <span class="nxl-mtext">Internal Rejections</span>
+                            </a>
+                        </li>
+                    @endif
                     
-                    <li class="nxl-item">
-                        <a class="nav-link nxl-link" href="{{ route('customerRejections.index') }}">
-                            <span class="nxl-micon"><i class="feather-file-text"></i></span> 
-                            <span class="nxl-mtext">Customer Rejections</span>
-                        </a>
-                    </li>
+                    @if(auth()->user()->can('customerRejections-create') || auth()->user()->can('customerRejections-list'))
+                        <li class="nxl-item">
+                            <a class="nav-link nxl-link" href="{{ route('customerRejections.index') }}">
+                                <span class="nxl-micon"><i class="feather-slash"></i></span> 
+                                <span class="nxl-mtext">Customer Rejections</span>
+                            </a>
+                        </li>
+                    @endif
                     
-                    <li class="nxl-item">
-                        <a class="nav-link nxl-link" href="{{ route('sales.index') }}">
-                            <span class="nxl-micon"><i class="feather-file-text"></i></span> 
-                            <span class="nxl-mtext">Sales</span>
-                        </a>
-                    </li>
+                    @if(auth()->user()->can('sales-list') || auth()->user()->can('sales-create') || auth()->user()->can('sales-edit') || auth()->user()->can('sales-delete'))
+                        <li class="nxl-item">
+                            <a class="nav-link nxl-link" href="{{ route('sales.index') }}">
+                                <span class="nxl-micon"><i class="feather-trending-up"></i></span> 
+                                <span class="nxl-mtext">Sales</span>
+                            </a>
+                        </li>
+                    @endif
 
-                    <li class="nxl-item">
-                        <a class="nav-link nxl-link" href="{{ route('settings.edit') }}">
-                            <span class="nxl-micon"><i class="feather-settings"></i></span> 
-                            <span class="nxl-mtext">Settings</span>                                
-                        </a>
-                    </li>
-
-
-
+                    @if(auth()->user()->can('settings-list'))
+                        <li class="nxl-item">
+                            <a class="nav-link nxl-link" href="{{ route('settings.edit') }}">
+                                <span class="nxl-micon"><i class="feather-settings"></i></span> 
+                                <span class="nxl-mtext">Settings</span>                                
+                            </a>
+                        </li>
+                    @endif
                 </ul>
             </div>
         </div>

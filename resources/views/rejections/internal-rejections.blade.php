@@ -17,10 +17,12 @@
                             <div class="card stretch stretch-full">
                                 <div class="card-header">
                                     <h5 class="card-title">Internal Rejection Parts</h5>
-                                    <div class="card-header-action">                      
-                                        <a class="btn btn-success btn-sm" href="{{ route('rejections.create') }}">
-                                            <i class="fa fa-plus"></i> Add Internal Rejection
-                                        </a>
+                                    <div class="card-header-action">    
+                                        @can('internalRejections-create')           
+                                            <a class="btn btn-success btn-sm" href="{{ route('rejections.create') }}">
+                                                <i class="fa fa-plus"></i> Add Internal Rejection
+                                            </a>
+                                        @endcan
                                     </div>
                                 </div>
                                 <div class="card-body custom-card-action p-0">

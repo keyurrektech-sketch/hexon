@@ -17,10 +17,12 @@
                             <div class="card stretch stretch-full">
                                 <div class="card-header">
                                     <h5 class="card-title">New Purchase Order</h5>
-                                    <div class="card-header-action">                      
-                                        <a class="btn btn-success btn-sm" href="{{ route('newPurchaseOrders.create') }}">
-                                            <i class="fa fa-plus"></i> Add New Purchase Orders
-                                        </a>
+                                    <div class="card-header-action">    
+                                        @can('purchaseOrder-create')                  
+                                            <a class="btn btn-success btn-sm" href="{{ route('newPurchaseOrders.create') }}">
+                                                <i class="fa fa-plus"></i> Add New Purchase Orders
+                                            </a>
+                                        @endcan
                                     </div>
                                 </div>
                                 <div class="card-body custom-card-action p-0">

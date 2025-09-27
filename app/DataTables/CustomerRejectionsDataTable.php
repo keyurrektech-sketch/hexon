@@ -32,11 +32,13 @@ class CustomerRejectionsDataTable extends DataTable
             ->addColumn('action', function(CustomerRejection $customerRejection) {
                 $user = auth()->user();
                 $btn = '<div class="btn-group" role="group">';
+                if ($user->can('customerRejections-list')) {
                     $btn .= '<button type="button" 
                                 class="btn btn-sm btn-info me-2 showCustomerRejectionParts" 
                                 data-id="'.$customerRejection->id.'">
                                 <i class="fa fa-eye"></i>
                             </button>';
+                }
                 $btn .= '</div>';
                 return $btn;
             })

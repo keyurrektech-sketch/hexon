@@ -30,20 +30,24 @@ class RejectionsDataTable extends DataTable
                 return $rejection->sparePart ? $rejection->sparePart->name : '-';
             })
             ->addColumn('action', function (Rejection $rejection) {
+                $user = auth()->user();
                 // Edit and Delete buttons
                 $btn = '<div class="btn-group" role="group">';
-                $btn .= '<a href="'.route('rejections.edit', $rejection->id).'" class="btn btn-sm btn-primary me-1">
-                                <i class="fa fa-edit"></i>
-                              </a>';
-                
-                $btn .= '<form action="'.route('rejections.destroy', $rejection->id).'" 
-                            method="POST" style="display:inline-block;">
-                            '.csrf_field().method_field("DELETE").'
-                            <button type="submit" class="btn btn-sm btn-danger"
-                                onclick="return confirm(\'Are you sure?\')">
-                                <i class="fa fa-trash"></i>
-                            </button>
-                        </form>';
+                if ($user->can('internalRejections-edit')) {
+                    $btn .= '<a href="'.route('rejections.edit', $rejection->id).'" class="btn btn-sm btn-primary me-1">
+                                    <i class="fa fa-edit"></i>
+                                </a>';
+                }
+                if ($user->can('internalRejections-delete')) {
+                    $btn .= '<form action="'.route('rejections.destroy', $rejection->id).'" 
+                    method="POST" style="display:inline-block;">
+                    '.csrf_field().method_field("DELETE").'
+                    <button type="submit" class="btn btn-sm btn-danger"
+                    onclick="return confirm(\'Are you sure?\')">
+                    <i class="fa fa-trash"></i>
+                    </button>
+                    </form>';
+                }
                 $btn .= '</div>';
                 return $btn;
             })

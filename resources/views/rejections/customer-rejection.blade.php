@@ -17,10 +17,12 @@
                             <div class="card stretch stretch-full">
                                 <div class="card-header">
                                     <h5 class="card-title">Rejection Prorducts</h5>
-                                    <div class="card-header-action">                      
-                                        <a class="btn btn-success btn-sm" href="{{ route('customerRejections.create') }}">
-                                            <i class="fa fa-plus"></i> Add Customer Rejection
-                                        </a>
+                                    <div class="card-header-action">             
+                                        @can('customerRejections-create')         
+                                            <a class="btn btn-success btn-sm" href="{{ route('customerRejections.create') }}">
+                                                <i class="fa fa-plus"></i> Add Customer Rejection
+                                            </a>
+                                        @endcan
                                     </div>
                                 </div>
                                 <div class="card-body custom-card-action p-0">

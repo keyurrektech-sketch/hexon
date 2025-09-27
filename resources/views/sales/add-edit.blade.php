@@ -356,5 +356,24 @@
         // Initial calculation on page load
         calculateAmounts();
     });
+
+    $('#customer_id').on('change', function() {
+        var customerId = $(this).val();
+        
+        if (customerId) {
+            $.ajax({
+                url: '/customer/' + customerId + '/details',
+                type: 'GET',
+                success: function(data) {
+                    $('#address').val(data.address);
+                },
+                error: function() {
+                    alert('Unable to fetch customer address.');
+                }
+            });
+        } else {
+            $('#address').val(''); 
+        }
+    });
 </script>
 @endpush

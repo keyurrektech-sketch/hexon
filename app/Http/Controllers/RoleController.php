@@ -28,8 +28,11 @@ class RoleController extends Controller
 
     public function create(): View
     {
-        $permission = Permission::get();
-        return view('roles.create', compact('permission'));
+        $permissions = Permission::all()->groupBy(function ($perm) {
+            return explode('-', $perm->name)[0]; // 'role-list' => 'role'
+        });
+
+        return view('roles.create', compact('permissions'));
     }
 
     public function store(Request $request): RedirectResponse
@@ -69,13 +72,17 @@ class RoleController extends Controller
 
     public function edit($id): View
     {
-        $role = Role::find($id);
-        $permission = Permission::get();
-        $rolePermissions = DB::table("role_has_permissions")->where("role_has_permissions.role_id", $id)
-            ->pluck('role_has_permissions.permission_id', 'role_has_permissions.permission_id')
-            ->all();
+        $role = Role::findOrFail($id); // safer than find()
+        $permissions = Permission::all()->groupBy(function ($perm) {
+            return explode('-', $perm->name)[0]; // group by prefix like 'role', 'user'
+        });
 
-        return view('roles.edit', compact('role', 'permission', 'rolePermissions'));
+        $rolePermissions = DB::table("role_has_permissions")
+            ->where("role_id", $id)
+            ->pluck('permission_id')
+            ->toArray(); // simpler than pluck with keys
+
+        return view('roles.edit', compact('role', 'permissions', 'rolePermissions'));
     }
 
     public function update(Request $request, $id): RedirectResponse

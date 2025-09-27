@@ -6,8 +6,8 @@
         <div class="auth-minimal-inner">
             <div class="minimal-card-wrapper">
                 <div class="card mb-4 mt-5 mx-4 mx-sm-0 position-relative">
-                    <div class="wd-50 bg-white p-2 rounded-circle shadow-lg position-absolute translate-middle top-0 start-50">
-                        <img src="{{ $settings && $settings->logo ? asset('uploads/'.$settings->logo) : asset('uploads/user.png')}}" alt="" class="img-fluid">
+                    <div class="wd-100 bg-white p-2 rounded-circle shadow-lg position-absolute translate-middle top-0 start-50">
+                        <img src="{{ $settings && $settings->logo ? asset('storage/uploads/' . $settings->logo) : asset('uploads/user.png')}}" alt="" class="img-fluid">
                     </div>
                     <div class="card-body p-sm-5">
                         <h2 class="fs-20 fw-bolder mb-4">Register</h2>
@@ -39,7 +39,6 @@
                                             <strong>{{ $message }}</strong>
                                         </span>
                                     @enderror
-                                    <div class="input-group-text border-start bg-gray-2 c-pointer show-pass" data-bs-toggle="tooltip" title="Show/Hide Password"><i></i></div>
                                 </div>
                                 <div class="progress-bar mt-2">
                                     <div></div>
@@ -49,17 +48,7 @@
                                 </div>
                             </div>
                             <div class="mb-4">
-                            <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password" placeholder="Confirm Password">
-                            </div>
-                            <div class="mt-4">
-                                <div class="custom-control custom-checkbox mb-2">
-                                    <input type="checkbox" class="custom-control-input" id="receiveMial" required>
-                                    <label class="custom-control-label c-pointer text-muted" for="receiveMial" style="font-weight: 400 !important">Yes, I wnat to receive Duralux community emails</label>
-                                </div>
-                                <div class="custom-control custom-checkbox">
-                                    <input type="checkbox" class="custom-control-input" id="termsCondition" required>
-                                    <label class="custom-control-label c-pointer text-muted" for="termsCondition" style="font-weight: 400 !important">I agree to all the <a href="">Terms &amp; Conditions</a> and <a href="">Fees</a>.</label>
-                                </div>
+                                <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password" placeholder="Confirm Password">
                             </div>
                             <div class="mt-5">
                                 <button type="submit" class="btn btn-lg btn-primary w-100">Create Account</button>

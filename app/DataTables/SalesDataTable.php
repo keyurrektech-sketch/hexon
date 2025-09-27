@@ -44,18 +44,18 @@ class SalesDataTable extends DataTable
                                     <i class="fa fa-download"></i> PDF</a>';
                     }
 
-                    if ($user->can('product-list')) {
+                    if ($user->can('sales-list')) {
                         $btn .= '<button type="button" 
                                     class="btn btn-sm btn-info me-2 showSale" 
                                     data-id="'.$sale->id.'">
                                     <i class="fa fa-eye"></i>
                                 </button>';
                     }
-                    if ($user->can('product-edit')) {
+                    if ($user->can('sales-edit')) {
                         $btn .= '<a href="'.route('sales.edit', $sale->id).'" class="btn btn-sm btn-primary me-2">
                                     <i class="fa fa-edit"></i></a>';
                     }
-                    if ($user->can('product-delete')) {
+                    if ($user->can('sales-delete')) {
                         $btn .= '<form action="'.route('sales.destroy', $sale->id).'" method="POST" style="display:inline-block;">
                                     '.csrf_field().method_field("DELETE").'
                                     <button type="submit" class="btn btn-sm btn-danger me-2" 

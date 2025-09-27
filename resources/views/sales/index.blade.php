@@ -18,7 +18,7 @@
                                 <div class="card-header">
                                     <h5 class="card-title">Sales</h5>
                                     <div class="card-header-action">                      
-                                        @can('product-create')
+                                        @can('sales-create')
                                             <a class="btn btn-success btn-sm" href="{{ route('sales.create') }}">
                                                 <i class="fa fa-plus"></i> Add Sales
                                             </a>
